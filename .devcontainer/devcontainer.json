@@ -1,0 +1,26 @@
+{
+  "name": "qmk_firmware",
+  "dockerFile": "Dockerfile",
+  "extensions": [
+    "esbenp.prettier-vscode",
+    "EditorConfig.EditorConfig",
+    "xaver.clang-format",
+    "ms-vscode.cpptools",
+    "bierner.github-markdown-preview",
+    "donjayamanne.git-extension-pack",
+    "CoenraadS.bracket-pair-colorizer-2"
+  ],
+  "settings": {
+    "terminal.integrated.shell.linux": "/bin/bash", 
+       "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    },
+  },
+  "remoteUser": "dev",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+  "workspaceFolder": "/workspace",
+  "mounts": [
+    "source=${env:HOME}${env:USERPROFILE}/.ssh,target=/home/dev/.ssh,type=bind,consistency=cached",
+    "source=${env:HOME}${env:USERPROFILE}/.gitconfig,target=/home/dev/.gitconfig,type=bind,consistency=cached"
+  ]
+}
