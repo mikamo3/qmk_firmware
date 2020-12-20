@@ -3,7 +3,7 @@ MCU = atmega32u4
 
 # Bootloader selection
 BOOTLOADER = atmel-dfu
-
+SRC += jtu_custom_keycodes.c
 # Build Options
 #   change yes to no to disable
 #
