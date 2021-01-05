@@ -52,7 +52,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     TD(TD_LCTLGUI), LT(_LOWER_JP, KC_SPC), LT(_RAISE_JP, KC_ENT), TD(TD_RALTGUI)),
     [_LOWER_JP] = LAYOUT(JU_GRV, JP_EXLM, JP_AT, JP_HASH, JP_DLR, JP_PERC, JP_CIRC, JP_AMPR, JP_ASTR, JP_LPRN, JP_RPRN, JU_QUOT, KC_DEL,
      JP_ZKHK,KC_1, KC_2, KC_3, KC_4, KC_5, KC_6, KC_7, KC_8, KC_9, KC_0, _______, _______,
-      JU_EQL, JP_LT, JP_LCBR, JP_LBRC, JU_MINS, KC_RBRC, KC_RCBR, KC_GT, _______, _______, _______,
+      JU_EQL, JP_LT, JP_LCBR, JP_LBRC, JU_MINS, JP_RBRC, JP_RCBR, KC_GT, _______, _______, _______,
       _______, _______, TO(_BASE), _______),
     [_RAISE_JP] = LAYOUT(_______, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, KC_F12,
      JP_ZKHK, KC_HOME, KC_PGDN, KC_PGUP, KC_END, _______, KC_LEFT, KC_DOWN, KC_UP, KC_RGHT, _______, _______,
