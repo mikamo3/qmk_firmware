@@ -10,6 +10,7 @@ MCU = atmega32u4
 #   ATmega32A    bootloadHID
 #   ATmega328P   USBasp
 BOOTLOADER = caterina
+SRC += jtu_custom_keycodes.c
 
 # Build Options
 #   change yes to no to disable
