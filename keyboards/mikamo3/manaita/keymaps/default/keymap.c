@@ -29,6 +29,13 @@ enum layer_names {
 
 };
 enum { TD_LCTLGUI = 0, TD_RALTGUI = 1 };
+enum manaita_keycodes {
+    KC_LOWER=SAFE_RANGE,
+    KC_RAISE,
+    KC_BASE_JP,
+    KC_LOWER_JP,
+    KC_RAISE_JP,
+    KC_BASE};
 // Defines the keycodes used by our macros in process_record_user
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /* Base */

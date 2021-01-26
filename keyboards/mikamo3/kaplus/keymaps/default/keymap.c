@@ -177,7 +177,11 @@ void rgui_reset(qk_tap_dance_state_t *state, void *user_data) {
 qk_tap_dance_action_t tap_dance_actions[] = {[TD_LGUI] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, lgui_finished, lgui_reset), [TD_RGUI] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, rgui_finished, rgui_reset)};
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) { break; }
+    bool continue_process = process_record_user_jtu(keycode, record);
+    if (continue_process == false) {
+        return false;
+    }
+    switch (keycode) {}
     return true;
 }
 
