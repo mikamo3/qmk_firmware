@@ -14,8 +14,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include QMK_KEYBOARD_H
-#include "keycode.h"
-#include "quantum_keycodes.h"
 #include "jtu_custom_keycodes.h"
 #include "keymap_jp.h"
 // Defines names for use in layer keycodes and the keymap
@@ -30,12 +28,11 @@ enum layer_names {
 };
 enum { TD_LCTLGUI = 0, TD_RALTGUI = 1,TD_RSFTJP =2 };
 enum manaita_keycodes {
-    KC_LOWER=SAFE_RANGE,
+    KC_LOWER =JTU_SAFE_RANGE,
     KC_RAISE,
-    KC_BASE_JP,
     KC_LOWER_JP,
     KC_RAISE_JP,
-    KC_BASE};
+    };
 // Defines the keycodes used by our macros in process_record_user
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /* Base */
@@ -43,7 +40,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_ESC, KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_P, KC_BSLS, KC_BSPC,
         LCTL_T(KC_TAB),KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, KC_SCLN, KC_ENT,
          KC_LSFT,KC_Z, KC_X, KC_C, KC_V, KC_B, KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, TD(TD_RSFTJP),
-        TD(TD_LCTLGUI), LT(_LOWER, KC_SPC), LT(_RAISE, KC_ENT), TD(TD_RALTGUI)),
+        TD(TD_LCTLGUI), KC_LOWER, KC_RAISE, TD(TD_RALTGUI)),
     [_LOWER]    = LAYOUT(
         KC_GRV, KC_EXLM, KC_AT, KC_HASH, KC_DLR, KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_QUOT, KC_DEL,
         C(KC_SPC), KC_1, KC_2, KC_3, KC_4, KC_5, KC_6, KC_7, KC_8, KC_9, KC_0, _______,
@@ -56,7 +53,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE_JP]  = LAYOUT(KC_ESC, KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_P, JP_YEN, KC_BSPC,
      LCTL_T(KC_TAB),KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, JU_SCLN, KC_ENT,
       KC_LSFT,KC_Z, KC_X, KC_C, KC_V, KC_B, KC_N, KC_M, KC_COMM, KC_DOT, JP_SLSH, TD(TD_RSFTJP),
-    TD(TD_LCTLGUI), LT(_LOWER_JP, KC_SPC), LT(_RAISE_JP, KC_ENT), TD(TD_RALTGUI)),
+    TD(TD_LCTLGUI), KC_LOWER_JP,KC_RAISE_JP, TD(TD_RALTGUI)),
     [_LOWER_JP] = LAYOUT(JU_GRV, JP_EXLM, JP_AT, JP_HASH, JP_DLR, JP_PERC, JP_CIRC, JP_AMPR, JP_ASTR, JP_LPRN, JP_RPRN, JU_QUOT, KC_DEL,
      JP_ZKHK,KC_1, KC_2, KC_3, KC_4, KC_5, KC_6, KC_7, KC_8, KC_9, KC_0, _______, _______,
       JU_EQL, JP_LT, JP_LCBR, JP_LBRC, JU_MINS, JP_RBRC, JP_RCBR, KC_GT, _______, _______, _______,
@@ -211,10 +208,85 @@ qk_tap_dance_action_t tap_dance_actions[] = {
     [TD_RSFTJP] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, rsft_finished, rsft_reset)};
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    static uint32_t key_timer;
+    static bool lower_pressed=false;
+    static bool raise_pressed=false;
+    static bool lower_jp_pressed=false;
+    static bool raise_jp_pressed=false;
     bool continue_process = process_record_user_jtu(keycode, record);
+
     if (continue_process == false) {
         return false;
     }
-    switch (keycode) {}
+    switch (keycode) {
+        case KC_LOWER:
+            if(record->event.pressed){
+                key_timer=timer_read32();
+                layer_on(_LOWER);
+                lower_pressed=true;
+            }else{
+                if(lower_pressed && timer_elapsed32(key_timer)<= TAPPING_TERM){
+                    register_code(KC_SPC);
+                    unregister_code(KC_SPC);
+                }
+                layer_off(_LOWER);
+                lower_pressed=false;
+            }
+            return false;
+        break;
+        case KC_RAISE:
+            if(record->event.pressed){
+                key_timer=timer_read32();
+                layer_on(_RAISE);
+                raise_pressed=true;
+            }else{
+                if(raise_pressed && timer_elapsed32(key_timer)<= TAPPING_TERM){
+                    register_code(KC_ENT);
+                    unregister_code(KC_ENT);
+                }
+                layer_off(_RAISE);
+                raise_pressed=false;
+            }
+            return false;
+        break;
+        case KC_LOWER_JP:
+            if(record->event.pressed){
+                key_timer=timer_read32();
+                layer_on(_LOWER_JP);
+                lower_jp_pressed=true;
+            }else{
+                if(lower_jp_pressed && timer_elapsed32(key_timer)<= TAPPING_TERM){
+                    register_code(KC_SPC);
+                    unregister_code(KC_SPC);
+                }
+                layer_off(_LOWER_JP);
+                lower_jp_pressed=false;
+            }
+            return false;
+        break;
+        case KC_RAISE_JP:
+            if(record->event.pressed){
+                key_timer=timer_read32();
+                layer_on(_RAISE_JP);
+                raise_jp_pressed=true;
+            }else{
+                if(raise_jp_pressed && timer_elapsed32(key_timer)<= TAPPING_TERM){
+                    register_code(KC_ENT);
+                    unregister_code(KC_ENT);
+                }
+                layer_off(_RAISE_JP);
+                raise_jp_pressed=false;
+            }
+            return false;
+        break;
+        default:
+            if(record->event.pressed){
+                lower_pressed=false;
+                raise_pressed=false;
+                lower_jp_pressed=false;
+                raise_jp_pressed=false;
+            }
+        break;
+    }
     return true;
 }
