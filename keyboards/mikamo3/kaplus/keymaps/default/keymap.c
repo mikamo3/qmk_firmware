@@ -27,19 +27,21 @@ enum layer_names {
 };
 
 // Defines the keycodes used by our macros in process_record_user
-enum custom_keycodes {
-    QMKBEST = SAFE_RANGE,
-    QMKURL
-};
+enum { TD_LGUI = 0, TD_RGUI = 1,TD_RSFTJP =2 };
 
-enum { TD_LGUI = 0, TD_RGUI = 1 };
+enum manaita_keycodes {
+    KC_LOWER =JTU_SAFE_RANGE,
+    KC_RAISE,
+    KC_LOWER_JP,
+    KC_RAISE_JP,
+};
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /* Base */
     [_BASE] = LAYOUT(
         KC_ESC, KC_Q, KC_W, KC_E, KC_R, KC_T,KC_MINS,KC_EQL, KC_Y, KC_U, KC_I, KC_O, KC_P, KC_BSPC,
         KC_TAB,KC_A, KC_S, KC_D, KC_F, KC_G,KC_LBRC,KC_RBRC, KC_H, KC_J, KC_K, KC_L, KC_SCLN, KC_BSLS,
     KC_LCTL,  KC_Z, KC_X, KC_C, KC_V, KC_B,               KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_RSFT,
-            KC_LSFT,C(KC_SPC),TD(TD_LGUI),LT(_LOWER,KC_SPC),LCTL_T(KC_ESC),LSFT_T(KC_BSPC),LT(_RAISE,KC_ENT),TD(TD_RGUI),KC_RALT,KC_RSFT
+            KC_LSFT,C(KC_SPC),TD(TD_LGUI),LT(_LOWER,KC_SPC),LCTL_T(KC_ESC),LSFT_T(KC_BSPC),LT(_RAISE,KC_ENT),TD(TD_RGUI),KC_RALT,TD(TD_RSFTJP)
 
     ),
     [_LOWER] = LAYOUT(
@@ -60,7 +62,7 @@ _______,_______,KC_PSCR,KC_INS,KC_SLCK,KC_PAUS,_______,_______,_______,_______,_
         KC_ESC, KC_Q, KC_W, KC_E, KC_R, KC_T,JU_MINS,JU_EQL, KC_Y, KC_U, KC_I, KC_O, KC_P, KC_BSPC,
          KC_TAB,KC_A, KC_S, KC_D, KC_F, KC_G,JP_LBRC,JP_RBRC, KC_H, KC_J, KC_K, KC_L, JU_SCLN, JP_YEN,
     KC_LCTL,  KC_Z, KC_X, KC_C, KC_V, KC_B,               KC_N, KC_M, KC_COMM, KC_DOT, JP_SLSH, KC_RSFT,
-            KC_LSFT,JP_ZKHK,TD(TD_LGUI),LT(_LOWER_JP,KC_SPC),LCTL_T(KC_ESC),LSFT_T(KC_BSPC),LT(_RAISE_JP,KC_ENT),TD(TD_RGUI),KC_RALT,KC_RSFT
+            KC_LSFT,JP_ZKHK,TD(TD_LGUI),LT(_LOWER_JP,KC_SPC),LCTL_T(KC_ESC),LSFT_T(KC_BSPC),LT(_RAISE_JP,KC_ENT),TD(TD_RGUI),KC_RALT,TD(TD_RSFTJP)
 
     ),
     [_LOWER_JP] = LAYOUT(
@@ -88,11 +90,14 @@ enum { SINGLE = 1, DOUBLE, TRIPLE };
 uint8_t cur_dance(qk_tap_dance_state_t *state);
 void    lgui_finished(qk_tap_dance_state_t *state, void *user_data);
 void    rgui_finished(qk_tap_dance_state_t *state, void *user_data);
+void    rsft_finished(qk_tap_dance_state_t *state, void *user_data);
 void    lgui_reset(qk_tap_dance_state_t *state, void *user_data);
 void    rgui_reset(qk_tap_dance_state_t *state, void *user_data);
+void    rsft_reset(qk_tap_dance_state_t *state, void *user_data);
 
 static tap lgui_tap_state = {.is_press_action = true, .state = 0};
 static tap rgui_tap_state = {.is_press_action = true, .state = 0};
+static tap rsft_tap_state = {.is_press_action = true, .state = 0};
 
 uint8_t cur_dance(qk_tap_dance_state_t *state) {
     if (state->count == 1) {
@@ -140,6 +145,24 @@ void rgui_finished(qk_tap_dance_state_t *state, void *user_data) {
     }
 }
 
+void rsft_finished(qk_tap_dance_state_t *state, void *user_data) {
+    rsft_tap_state.state = cur_dance(state);
+    switch (rsft_tap_state.state) {
+        case SINGLE:
+            register_code(KC_RSFT);
+            break;
+        case DOUBLE:
+            if (IS_LAYER_ON(_BASE)) {
+                layer_on(_BASE_JP);
+                layer_off(_BASE);
+            } else {
+                layer_on(_BASE);
+                layer_off(_BASE_JP);
+            }
+            break;
+    }
+}
+
 void lgui_reset(qk_tap_dance_state_t *state, void *user_data) {
     switch (lgui_tap_state.state) {
         case SINGLE:
@@ -174,7 +197,20 @@ void rgui_reset(qk_tap_dance_state_t *state, void *user_data) {
     rgui_tap_state.state = 0;
 }
 
-qk_tap_dance_action_t tap_dance_actions[] = {[TD_LGUI] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, lgui_finished, lgui_reset), [TD_RGUI] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, rgui_finished, rgui_reset)};
+void rsft_reset(qk_tap_dance_state_t *state, void *user_data) {
+    switch (rsft_tap_state.state) {
+        case SINGLE:
+            unregister_code(KC_RSFT);
+            break;
+    }
+    rsft_tap_state.state = 0;
+}
+
+qk_tap_dance_action_t tap_dance_actions[] = {
+    [TD_LGUI] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, lgui_finished, lgui_reset),
+    [TD_RGUI] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, rgui_finished, rgui_reset),
+    [TD_RSFTJP] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, rsft_finished, rsft_reset)
+};
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     bool continue_process = process_record_user_jtu(keycode, record);
