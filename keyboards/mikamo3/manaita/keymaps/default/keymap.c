@@ -27,6 +27,7 @@ enum layer_names {
 
 };
 enum { TD_LCTLGUI = 0, TD_RALTGUI = 1,TD_RSFTJP =2 };
+
 enum manaita_keycodes {
     KC_LOWER =JTU_SAFE_RANGE,
     KC_RAISE,
@@ -69,19 +70,19 @@ typedef struct {
 } tap;
 
 enum { SINGLE = 1, DOUBLE, TRIPLE, QUAD };
-uint8_t    cur_dance(qk_tap_dance_state_t *state);
-void       lgui_finished(qk_tap_dance_state_t *state, void *user_data);
-void       rgui_finished(qk_tap_dance_state_t *state, void *user_data);
-void       rsft_finished(qk_tap_dance_state_t *state, void *user_data);
-void       lgui_reset(qk_tap_dance_state_t *state, void *user_data);
-void       rgui_reset(qk_tap_dance_state_t *state, void *user_data);
-void       rsft_reset(qk_tap_dance_state_t *state, void *user_data);
+uint8_t cur_dance(qk_tap_dance_state_t *state);
+void    lgui_finished(qk_tap_dance_state_t *state, void *user_data);
+void    rgui_finished(qk_tap_dance_state_t *state, void *user_data);
+void    rsft_finished(qk_tap_dance_state_t *state, void *user_data);
+void    lgui_reset(qk_tap_dance_state_t *state, void *user_data);
+void    rgui_reset(qk_tap_dance_state_t *state, void *user_data);
+void    rsft_reset(qk_tap_dance_state_t *state, void *user_data);
 
 static tap lgui_tap_state = {.is_press_action = true, .state = 0};
 static tap rgui_tap_state = {.is_press_action = true, .state = 0};
 static tap rsft_tap_state = {.is_press_action = true, .state = 0};
 
-uint8_t    cur_dance(qk_tap_dance_state_t *state) {
+uint8_t cur_dance(qk_tap_dance_state_t *state) {
     if (state->count == 1) {
         return SINGLE;
     } else if (state->count == 2) {
@@ -90,7 +91,7 @@ uint8_t    cur_dance(qk_tap_dance_state_t *state) {
         return TRIPLE;
     } else if (state->count == 4) {
         return QUAD;
-    }else{
+    } else {
         return 8;
     }
 }
@@ -135,7 +136,6 @@ void rgui_finished(qk_tap_dance_state_t *state, void *user_data) {
     }
 }
 
-
 void rsft_finished(qk_tap_dance_state_t *state, void *user_data) {
     rsft_tap_state.state = cur_dance(state);
     switch (rsft_tap_state.state) {
@@ -143,10 +143,10 @@ void rsft_finished(qk_tap_dance_state_t *state, void *user_data) {
             register_code(KC_RSFT);
             break;
         case DOUBLE:
-            if(IS_LAYER_ON(_BASE)){
+            if (IS_LAYER_ON(_BASE)) {
                 layer_on(_BASE_JP);
                 layer_off(_BASE);
-            }else{
+            } else {
                 layer_on(_BASE);
                 layer_off(_BASE_JP);
             }
@@ -193,7 +193,6 @@ void rgui_reset(qk_tap_dance_state_t *state, void *user_data) {
     rgui_tap_state.state = 0;
 }
 
-
 void rsft_reset(qk_tap_dance_state_t *state, void *user_data) {
     switch (rsft_tap_state.state) {
         case SINGLE:
@@ -202,91 +201,93 @@ void rsft_reset(qk_tap_dance_state_t *state, void *user_data) {
     }
     rsft_tap_state.state = 0;
 }
+
 qk_tap_dance_action_t tap_dance_actions[] = {
     [TD_LCTLGUI] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, lgui_finished, lgui_reset),
     [TD_RALTGUI] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, rgui_finished, rgui_reset),
-    [TD_RSFTJP] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, rsft_finished, rsft_reset)};
+    [TD_RSFTJP] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, rsft_finished, rsft_reset)
+};
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     static uint32_t key_timer;
-    static bool lower_pressed=false;
-    static bool raise_pressed=false;
-    static bool lower_jp_pressed=false;
-    static bool raise_jp_pressed=false;
-    bool continue_process = process_record_user_jtu(keycode, record);
+    static bool     lower_pressed    = false;
+    static bool     raise_pressed    = false;
+    static bool     lower_jp_pressed = false;
+    static bool     raise_jp_pressed = false;
+    bool            continue_process = process_record_user_jtu(keycode, record);
 
     if (continue_process == false) {
         return false;
     }
     switch (keycode) {
         case KC_LOWER:
-            if(record->event.pressed){
-                key_timer=timer_read32();
+            if (record->event.pressed) {
+                key_timer = timer_read32();
                 layer_on(_LOWER);
-                lower_pressed=true;
-            }else{
-                if(lower_pressed && timer_elapsed32(key_timer)<= TAPPING_TERM){
+                lower_pressed = true;
+            } else {
+                if (lower_pressed && timer_elapsed32(key_timer) <= TAPPING_TERM) {
                     register_code(KC_SPC);
                     unregister_code(KC_SPC);
                 }
                 layer_off(_LOWER);
-                lower_pressed=false;
+                lower_pressed = false;
             }
             return false;
-        break;
+            break;
         case KC_RAISE:
-            if(record->event.pressed){
-                key_timer=timer_read32();
+            if (record->event.pressed) {
+                key_timer = timer_read32();
                 layer_on(_RAISE);
-                raise_pressed=true;
-            }else{
-                if(raise_pressed && timer_elapsed32(key_timer)<= TAPPING_TERM){
+                raise_pressed = true;
+            } else {
+                if (raise_pressed && timer_elapsed32(key_timer) <= TAPPING_TERM) {
                     register_code(KC_ENT);
                     unregister_code(KC_ENT);
                 }
                 layer_off(_RAISE);
-                raise_pressed=false;
+                raise_pressed = false;
             }
             return false;
-        break;
+            break;
         case KC_LOWER_JP:
-            if(record->event.pressed){
-                key_timer=timer_read32();
+            if (record->event.pressed) {
+                key_timer = timer_read32();
                 layer_on(_LOWER_JP);
-                lower_jp_pressed=true;
-            }else{
-                if(lower_jp_pressed && timer_elapsed32(key_timer)<= TAPPING_TERM){
+                lower_jp_pressed = true;
+            } else {
+                if (lower_jp_pressed && timer_elapsed32(key_timer) <= TAPPING_TERM) {
                     register_code(KC_SPC);
                     unregister_code(KC_SPC);
                 }
                 layer_off(_LOWER_JP);
-                lower_jp_pressed=false;
+                lower_jp_pressed = false;
             }
             return false;
-        break;
+            break;
         case KC_RAISE_JP:
-            if(record->event.pressed){
-                key_timer=timer_read32();
+            if (record->event.pressed) {
+                key_timer = timer_read32();
                 layer_on(_RAISE_JP);
-                raise_jp_pressed=true;
-            }else{
-                if(raise_jp_pressed && timer_elapsed32(key_timer)<= TAPPING_TERM){
+                raise_jp_pressed = true;
+            } else {
+                if (raise_jp_pressed && timer_elapsed32(key_timer) <= TAPPING_TERM) {
                     register_code(KC_ENT);
                     unregister_code(KC_ENT);
                 }
                 layer_off(_RAISE_JP);
-                raise_jp_pressed=false;
+                raise_jp_pressed = false;
             }
             return false;
-        break;
+            break;
         default:
-            if(record->event.pressed){
-                lower_pressed=false;
-                raise_pressed=false;
-                lower_jp_pressed=false;
-                raise_jp_pressed=false;
+            if (record->event.pressed) {
+                lower_pressed    = false;
+                raise_pressed    = false;
+                lower_jp_pressed = false;
+                raise_jp_pressed = false;
             }
-        break;
+            break;
     }
     return true;
 }
