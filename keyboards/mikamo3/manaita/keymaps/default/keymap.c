@@ -34,35 +34,65 @@ enum manaita_keycodes {
     KC_LOWER_JP,
     KC_RAISE_JP,
     };
+#define MN_CTTB LCTL_T(KC_TAB)
+#define MN_SFJP TD(TD_RSFTJP)
+#define MN_LCGU TD(TD_LCTLGUI)
+#define MN_LWER KC_LOWER
+#define MN_RISE KC_RAISE
+#define MN_LWRJ KC_LOWER_JP
+#define MN_RISJ KC_RAISE_JP
+#define MN_RAGU TD(TD_RALTGUI)
+#define MN_ENJP C(KC_SPC)
 // Defines the keycodes used by our macros in process_record_user
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+    /*
+    ---------------------------------------------------------------------------------------------------------
+    |       |       |       |       |       |       |       |       |       |       |       |       |       |
+    ---------------------------------------------------------------------------------------------------------
+    |         |       |       |       |       |       |       |       |       |       |       |             |
+    ---------------------------------------------------------------------------------------------------------
+    |             |       |       |       |       |       |       |       |       |       |       |         |
+    ---------------------------------------------------------------------------------------------------------
+                          |                 |         |         |                     |
+                          -------------------------------------------------------------
+    */
     /* Base */
-    [_BASE]     = LAYOUT(
-        KC_ESC, KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_P, KC_BSLS, KC_BSPC,
-        LCTL_T(KC_TAB),KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, KC_SCLN, KC_ENT,
-         KC_LSFT,KC_Z, KC_X, KC_C, KC_V, KC_B, KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, TD(TD_RSFTJP),
-        TD(TD_LCTLGUI), KC_LOWER, KC_RAISE, TD(TD_RALTGUI)),
-    [_LOWER]    = LAYOUT(
-        KC_GRV, KC_EXLM, KC_AT, KC_HASH, KC_DLR, KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_QUOT, KC_DEL,
-        C(KC_SPC), KC_1, KC_2, KC_3, KC_4, KC_5, KC_6, KC_7, KC_8, KC_9, KC_0, _______,
-        _______, KC_EQL, KC_LT, KC_LCBR, KC_LBRC, KC_MINS, KC_RBRC, KC_RCBR, KC_GT, _______, _______, _______,
-         _______, _______, _______, _______),
-    [_RAISE]    = LAYOUT(_______, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, KC_F12,
-    C(KC_SPC), KC_HOME, KC_PGDN, KC_PGUP, KC_END, _______, KC_LEFT, KC_DOWN, KC_UP, KC_RGHT, _______, _______,
-     _______, KC_PSCR, KC_INS, KC_SLCK, KC_PAUS, _______, _______, _______, _______, _______, _______, _______,
-      _______, _______, _______, _______),
-    [_BASE_JP]  = LAYOUT(KC_ESC, KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_P, JP_YEN, KC_BSPC,
-     LCTL_T(KC_TAB),KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, JU_SCLN, KC_ENT,
-      KC_LSFT,KC_Z, KC_X, KC_C, KC_V, KC_B, KC_N, KC_M, KC_COMM, KC_DOT, JP_SLSH, TD(TD_RSFTJP),
-    TD(TD_LCTLGUI), KC_LOWER_JP,KC_RAISE_JP, TD(TD_RALTGUI)),
-    [_LOWER_JP] = LAYOUT(JU_GRV, JP_EXLM, JP_AT, JP_HASH, JP_DLR, JP_PERC, JP_CIRC, JP_AMPR, JP_ASTR, JP_LPRN, JP_RPRN, JU_QUOT, KC_DEL,
-     JP_ZKHK,KC_1, KC_2, KC_3, KC_4, KC_5, KC_6, KC_7, KC_8, KC_9, KC_0, _______, _______,
-      JU_EQL, JP_LT, JP_LCBR, JP_LBRC, JU_MINS, JP_RBRC, JP_RCBR, KC_GT, _______, _______, _______,
-      _______, _______, _______, _______),
-    [_RAISE_JP] = LAYOUT(_______, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, KC_F12,
-     JP_ZKHK, KC_HOME, KC_PGDN, KC_PGUP, KC_END, _______, KC_LEFT, KC_DOWN, KC_UP, KC_RGHT, _______, _______,
-      _______, KC_PSCR, KC_INS, KC_SLCK, KC_PAUS, _______, _______, _______, _______, _______, _______, _______,
-       _______, _______, _______, _______)};
+[_BASE]=LAYOUT(
+    KC_ESC ,KC_Q   ,KC_W   ,KC_E   ,KC_R   ,KC_T   ,KC_Y   ,KC_U   ,KC_I   ,KC_O   ,KC_P   ,KC_BSLS,KC_BSPC,
+    MN_CTTB  ,KC_A   ,KC_S   ,KC_D   ,KC_F   ,KC_G   ,KC_H   ,KC_J   ,KC_K   ,KC_L   ,KC_SCLN ,KC_ENT      ,
+    KC_LSFT      ,KC_Z   ,KC_X   ,KC_C   ,KC_V   ,KC_B   ,KC_N   ,KC_M   ,KC_COMM,KC_DOT ,KC_SLSH,MN_SFJP  ,
+                          MN_LCGU          ,MN_LWER  ,MN_RISE  ,MN_RAGU
+    ),
+[_LOWER]=LAYOUT(
+    KC_GRV ,KC_EXLM,KC_AT  ,KC_HASH,KC_DLR ,KC_PERC,KC_CIRC,KC_AMPR,KC_ASTR,KC_LPRN,KC_RPRN,KC_QUOT,KC_DEL ,
+    MN_ENJP  ,KC_1   ,KC_2   ,KC_3   ,KC_4   ,KC_5   ,KC_6   ,KC_7   ,KC_8   ,KC_9   ,KC_0   ,_______      ,
+    _______      ,KC_EQL ,KC_LT  ,KC_LCBR,KC_LBRC,KC_MINS,KC_RBRC,KC_RCBR,KC_GT  ,_______,_______,_______  ,
+                          _______          ,_______  ,_______  ,_______
+    ),
+[_RAISE]=LAYOUT(
+    _______,KC_F1  ,KC_F2  ,KC_F3  ,KC_F4  ,KC_F5  ,KC_F6  ,KC_F7  ,KC_F8  ,KC_F9  ,KC_F10 ,KC_F11 ,KC_F12 ,
+    MN_ENJP  ,KC_HOME,KC_PGDN,KC_PGUP,KC_END ,_______,KC_LEFT,KC_DOWN,KC_UP  ,KC_RGHT,_______,_______      ,
+    _______      ,KC_PSCR,KC_INS ,KC_SLCK,KC_PAUS,_______,_______,_______,_______,_______,_______,_______  ,
+                          _______          ,_______  ,_______  ,_______
+    ),
+[_BASE_JP]=LAYOUT(
+    KC_ESC ,KC_Q   ,KC_W   ,KC_E   ,KC_R   ,KC_T   ,KC_Y   ,KC_U   ,KC_I   ,KC_O   ,KC_P   ,JP_YEN ,KC_BSPC,
+    MN_ENJP  ,KC_A   ,KC_S   ,KC_D   ,KC_F   ,KC_G   ,KC_H   ,KC_J   ,KC_K   ,KC_L   ,JU_SCLN,KC_ENT       ,
+    KC_LSFT      ,KC_Z   ,KC_X   ,KC_C   ,KC_V   ,KC_B   ,KC_N   ,KC_M   ,KC_COMM,KC_DOT ,JP_SLSH,MN_SFJP  ,
+                          MN_LCGU          ,MN_LWRJ  ,MN_RISJ  ,MN_RAGU
+    ),
+[_LOWER_JP]=LAYOUT(
+    JU_GRV ,JP_EXLM,JP_AT  ,JP_HASH,JP_DLR ,JP_PERC,JP_CIRC,JP_AMPR,JP_ASTR,JP_LPRN,JP_RPRN,JU_QUOT,KC_DEL ,
+    JP_ZKHK  ,KC_1   ,KC_2   ,KC_3   ,KC_4   ,KC_5   ,KC_6   ,KC_7   ,KC_8   ,KC_9   ,KC_0   ,_______      ,
+    _______      ,JU_EQL ,JP_LT  ,JP_LCBR,JP_LBRC,JU_MINS,JP_RBRC,JP_RCBR,KC_GT  ,_______,_______,_______  ,
+                          _______          ,_______  ,_______  ,_______
+),
+[_RAISE_JP]=LAYOUT(
+    _______,KC_F1  ,KC_F2  ,KC_F3  ,KC_F4  ,KC_F5  ,KC_F6  ,KC_F7  ,KC_F8  ,KC_F9  ,KC_F10 ,KC_F11 ,KC_F12 ,
+    JP_ZKHK  ,KC_HOME,KC_PGDN,KC_PGUP,KC_END,_______,KC_LEFT,KC_DOWN,KC_UP  ,KC_RGHT,_______,       _______,
+    _______      ,KC_PSCR,KC_INS ,KC_SLCK,KC_PAUS,_______,_______,_______,_______,_______,_______,  _______,
+                          _______          ,_______  ,_______  ,_______
+)};
 
 typedef struct {
     bool    is_press_action;
@@ -216,9 +246,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     static bool     raise_jp_pressed = false;
     bool            continue_process = process_record_user_jtu(keycode, record);
 
-    if (continue_process == false) {
-        return false;
-    }
     switch (keycode) {
         case KC_LOWER:
             if (record->event.pressed) {
@@ -288,6 +315,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 raise_jp_pressed = false;
             }
             break;
+    }
+    if (continue_process == false) {
+        return false;
     }
     return true;
 }
