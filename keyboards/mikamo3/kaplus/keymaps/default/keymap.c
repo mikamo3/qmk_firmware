@@ -40,7 +40,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE] = LAYOUT(
         KC_ESC, KC_Q, KC_W, KC_E, KC_R, KC_T,KC_MINS,KC_EQL, KC_Y, KC_U, KC_I, KC_O, KC_P, KC_BSPC,
         KC_TAB,KC_A, KC_S, KC_D, KC_F, KC_G,KC_LBRC,KC_RBRC, KC_H, KC_J, KC_K, KC_L, KC_SCLN, KC_BSLS,
-    KC_LCTL,  KC_Z, KC_X, KC_C, KC_V, KC_B,               KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_RSFT,
+    KC_LCTL,  KC_Z, KC_X, KC_C, KC_V, KC_B,               KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_ENT,
             KC_LSFT,C(KC_SPC),TD(TD_LGUI),KC_LOWER,LCTL_T(KC_ESC),LSFT_T(KC_BSPC),KC_RAISE,TD(TD_RGUI),KC_RALT,TD(TD_RSFTJP)
 
     ),
@@ -61,7 +61,7 @@ _______,_______,KC_PSCR,KC_INS,KC_SLCK,KC_PAUS,_______,_______,_______,_______,_
     [_BASE_JP] = LAYOUT(
         KC_ESC, KC_Q, KC_W, KC_E, KC_R, KC_T,JU_MINS,JU_EQL, KC_Y, KC_U, KC_I, KC_O, KC_P, KC_BSPC,
          KC_TAB,KC_A, KC_S, KC_D, KC_F, KC_G,JP_LBRC,JP_RBRC, KC_H, KC_J, KC_K, KC_L, JU_SCLN, JP_YEN,
-    KC_LCTL,  KC_Z, KC_X, KC_C, KC_V, KC_B,               KC_N, KC_M, KC_COMM, KC_DOT, JP_SLSH, KC_RSFT,
+    KC_LCTL,  KC_Z, KC_X, KC_C, KC_V, KC_B,               KC_N, KC_M, KC_COMM, KC_DOT, JP_SLSH, KC_ENT,
             KC_LSFT,JP_ZKHK,TD(TD_LGUI),KC_LOWER_JP,LCTL_T(KC_ESC),LSFT_T(KC_BSPC),KC_RAISE_JP,TD(TD_RGUI),KC_RALT,TD(TD_RSFTJP)
 
     ),
